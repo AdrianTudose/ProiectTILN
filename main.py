@@ -53,6 +53,10 @@ def syn_to_text(syn):
         return "SUBSTANTIV"
     elif syn == "v":
         return "VERB"
+    elif syn == "r":
+        return "ADVERB"
+    elif syn == "a":
+        return "ADJECTIV"
     else:
         return "CEVA"
 
@@ -132,7 +136,6 @@ def analiza_semantica(propozitii, rules_file="semantic_rules.txt"):
         entire_text += propozitie_parti_de_vorbire
 
         result = r.findall(propozitie_parti_de_vorbire)
-
         for sequence_matched in result:
             string_seq = ""
             not_first = True
