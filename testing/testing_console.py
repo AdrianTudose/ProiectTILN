@@ -1,7 +1,5 @@
-import subprocess
+from algorithms import Preprocesor, SemanticAnalizer, Geolocator
 
-from main import import_word_sets, preprocesare, analiza_semantica, make_rule
-import rowordnet as rwn
 
 text = "Biserica din cărămidă frumos de la sfârșitul secolului XV-lea, de lângă Palatul Culturii, este Biserica Sf Nicolae. " \
        "O plimbare de 5 minute spre nord, pe Bulevardul Ștefan cel Mare, te duce la Biserica Trei Ierarhi (str. Ștefan " \
@@ -14,6 +12,6 @@ text1 = "Biserica Armenească de la începutul secolului XIX-lea se află pe Str
 
 
 
-x = preprocesare(text)
+x = Preprocesor.process(text)
 print(x)
-print(analiza_semantica(x))
+
