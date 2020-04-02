@@ -42,7 +42,7 @@ def import_rules(filename):
 
     return return_regex
 
-
+#you need to have more than one rule with one element
 def analise(sentences, rules_file="data/semantic_rules.txt"):
     query = import_rules(rules_file)
     matching_rules = list()
@@ -51,17 +51,18 @@ def analise(sentences, rules_file="data/semantic_rules.txt"):
     for j, sentence in enumerate(sentences):
         extended_sentence = " ".join([str(i) + "{" + x[1] + "}" if x[1] != "PUNCTUATIE" and x[1] != "ALINIERE" else ""
                                       for i, x in enumerate(sentence)])
-
         result = r.findall(extended_sentence)
 
         for sequence_matched in result:
             word_seq = [j]
+            words = list()
             seq_rule = ""
             for i, seq in enumerate(sequence_matched):
                 if seq != "":
+                    words.append(sentence[int(seq)][0])
                     word_seq.append(int(seq))
                     seq_rule = rules[rule_position[i]]
 
-            matching_rules.append([seq_rule, word_seq])
+            matching_rules.append([words,seq_rule, word_seq])
 
     return matching_rules

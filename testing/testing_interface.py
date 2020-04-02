@@ -97,9 +97,9 @@ def update_text(event):
 
         for position in positions:
             print("".join(
-                [x[0] for x in [sentences[position[1][0]][y] for y in range(position[1][1], position[1][-1] + 1)]]))
-            highlight(sentences[position[1][0]][position[1][1]][2][0], sentences[position[1][0]][position[1][-1]][3][0])
-            highlight(sentences[position[1][0]][position[1][1]][2][1], sentences[position[1][0]][position[1][-1]][3][1])
+                [x[0] for x in [sentences[position[2][0]][y] for y in range(position[2][1], position[2][-1] + 1)]]))
+            highlight(sentences[position[2][0]][position[2][1]][2][0], sentences[position[2][0]][position[2][-1]][3][0])
+            highlight(sentences[position[2][0]][position[2][1]][2][1], sentences[position[2][0]][position[2][-1]][3][1])
 
 
 text2.bind("<Configure>", update_text)

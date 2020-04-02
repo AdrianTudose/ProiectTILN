@@ -9,4 +9,4 @@ def get_coordinates(directions):
 
     for p in directions:
         for dir in p:
-            print(gmaps.geocode(dir))
+            print(gmaps.geocode(dir[0]))

@@ -12,6 +12,10 @@ text1 = "Biserica Armenească de la începutul secolului XIX-lea se află pe Str
 
 
 
-x = Preprocesor.process(text)
-print(x)
+processed_text = Preprocesor.process(text)
 
+directions = SemanticAnalizer.analise(processed_text)
+
+coordinates = Geolocator.get_coordinates(directions)
+
+print(coordinates)
