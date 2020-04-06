@@ -29,7 +29,7 @@ def import_word_sets(folder):
         line = 1
         while line_text:
             line_text = line_text[:-1]
-            if not re.match(r"[a-z]+", line_text):
+            if not re.match(r"[a-zțșâăî]+", line_text):
                 raise Exception("Invalid word in word_set: \"" + file + "\" ,line: " + str(
                     line) + " (words must be only lowercase letters).")
             word_set.append(line_text)
