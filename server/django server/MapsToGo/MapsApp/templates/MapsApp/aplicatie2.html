@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+ {% load static %}
+     <link rel="stylesheet" href="{% static "MapsApp/css/style.css" %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+ </head>
+ <body >
+
+  <ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="index.html">Acasa</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Aplicatie</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="despre.html">Despre</a>
+  </li>
+</ul>
+
+<div class="map noselect border" id="GoogleMap">
+</div>
+<div class="map_details border" id="Details">
+ <div> 
+<img src="{% static "MapsApp/img/waypoints_img.jpeg" %}" class="img-fluid waypoints_img" alt="Responsive image">
+<p class="text-primary text-lg">Waypoints</p>
+</div>
+<ul class="list-group" id="Waypoints">
+</ul>
+ <p>Alegeti modul de calatorie:</p>
+  <select id="travelMode" class="browser-default custom-select" onchange="initMap()">
+  <option selected value="DRIVING">cu autovehicul</option>
+  <option value="WALKING">mers pe jos</option>
+</select>
+<p></p>
+ <p id="travelTime" class="text-info"></p>
+</div>
+<script>
+
+ 
+
+   function get_duration(legs)
+   {
+    var duration=0;
+    for(var i=0;i<legs.length;i++)
+    {
+      var string=(legs[i].duration.text).split(" ");
+      console.log(parseInt(string[0]));
+
+      duration+=parseInt(string[0]);
+    }
+    console.log(duration);
+    var duration_info=document.getElementById("travelTime");
+    duration_info.textContent="Durata drumului: "+ duration+ " minute";
+   }
+
+  function add_waypoint(adress)
+  {
+    var wpt_ul=document.getElementById("Waypoints");
+   
+    var waypoint=document.createElement("li");
+        waypoint.classList.add("list-group-item");
+        waypoint.setAttribute("innerHTML",adress);
+        wpt_ul.appendChild(waypoint);
+   
+  }
+
+ function initMap() 
+  {
+        var directionsService = new google.maps.DirectionsService;
+        var directionsRenderer = new google.maps.DirectionsRenderer;
+        var map = new google.maps.Map(document.getElementById('GoogleMap'), {
+          zoom: 6,
+          center: {lat: 47.74, lng: 26.65}
+        });
+        directionsRenderer.setMap(map);
+
+       
+        calculateAndDisplayRoute(directionsService, directionsRenderer);
+      }
+      var start_coord={{start}};
+      var dest_coord={{destinatie}};
+
+
+      function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+        var waypts = [];
+        var waypoints = {{waypoints}};
+ 
+        var start= new google.maps.LatLng(start_coord[0],start_coord[1]);
+        var destinatie=new google.maps.LatLng(dest_coord[0],dest_coord[1]);
+        
+        var travelMode=(document.getElementById("travelMode")).options[(document.getElementById("travelMode")).selectedIndex].value;
+
+        for (var i = 0; i < waypts.length; i+=2) 
+          console.log(waypoints[i])
+          {
+            waypts.push({
+               location: new google.maps.LatLng(waypoints[i],waypoints[i+1]),
+              stopover: true
+            });
+
+          }
+        
+
+        directionsService.route({
+          origin: start,
+          destination:  destinatie,
+          waypoints: waypts,
+          optimizeWaypoints: true,
+          travelMode: travelMode,
+        }, function(response, status) {
+          if (status === 'OK') {
+            directionsRenderer.setDirections(response);
+            var route = response.routes[0];
+            console.log(response.routes[0].legs[0].duration.text);
+            get_duration(response.routes[0].legs);
+            }
+           else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      }
+
+
+
+
+      
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUBXhdveHeA0aajJhVHPxvpBUWymLXv9c&callback=initMap">
+    </script>
+ </body>
+</html>
