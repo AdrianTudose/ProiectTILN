@@ -1,0 +1,1 @@
+run server by typing in terminal: "py/python manage.py runserver"
