@@ -26,24 +26,67 @@
 
 <div class="map noselect border" id="GoogleMap">
 </div>
+
 <div class="map_details border" id="Details">
+  <img src="{% static "MapsApp/img/hide_img.jpeg" %}" class="img-fluid hide_button" alt="Responsive image">
+
+
  <div> 
 <img src="{% static "MapsApp/img/waypoints_img.jpeg" %}" class="img-fluid waypoints_img" alt="Responsive image">
 <p class="text-primary text-lg">Waypoints</p>
-</div>
 <ul class="list-group" id="Waypoints">
 </ul>
- <p>Alegeti modul de calatorie:</p>
+
+</div>
+
+<div id="accordion">
+    <div class="card">
+      <div class="card-header">
+        <a class="card-link" data-toggle="collapse" href="#collapseOne">
+          Detalii
+        </a>
+
+      </div>
+      <div id="collapseOne" class="collapse show" data-parent="#accordion">
+        <div class="card-body noselect">
+         <p>Alegeti modul de calatorie:</p>
   <select id="travelMode" class="browser-default custom-select" onchange="initMap()">
   <option selected value="DRIVING">cu autovehicul</option>
   <option value="WALKING">mers pe jos</option>
 </select>
 <p></p>
- <p id="travelTime" class="text-info"></p>
+
+<div>
+<img src="{% static "MapsApp/img/time_img.jpeg" %}" class="img-fluid waypoints_img" alt="Responsive image">
+ <p id="travelTime" class="text-primary text-lg">Durata drumului:</p>
+</div>
+
+ <div>
+  <img src="{% static "MapsApp/img/distance_img.jpeg" %}" class="img-fluid distance_img" alt="Responsive image">
+<p id="distance" class="text-primary text-lg">Distanta: </p>
+ </div> 
+
+        </div>
+      </div>
+    </div>
+<div hidden>
+
+</div> 
 </div>
 <script>
-
- 
+  
+  function get_distance(legs)
+   {
+    var distance=0;
+    for(var i=0;i<legs.length;i++)
+    {
+      var string=(legs[i].distance.text).split(" ");
+      console.log(legs[i].distance.text);
+      distance+=parseFloat(string[0]);
+    }
+    var distance_info=document.getElementById("distance");
+    distance_info.textContent="Distanta: "+ distance+ " km";
+   }
 
    function get_duration(legs)
    {
@@ -120,6 +163,7 @@
             var route = response.routes[0];
             console.log(response.routes[0].legs[0].duration.text);
             get_duration(response.routes[0].legs);
+            get_distance(response.routes[0].legs);
             }
            else {
             window.alert('Directions request failed due to ' + status);

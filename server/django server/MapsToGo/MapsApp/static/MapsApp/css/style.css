@@ -86,5 +86,26 @@ width:50%;
 padding-top: 1px;
 }
 
+.distance_img
+{
+  float:left;
+   width: 7%;
+  height:7%;
+  padding-right:1%;
+}
+
+.hide_button
+{
+  float:right;
+   width: 6%;
+  height:6%;
+  transition: all .2s ease-in-out;
+}
+.hide_button:hover
+{
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
 
 
