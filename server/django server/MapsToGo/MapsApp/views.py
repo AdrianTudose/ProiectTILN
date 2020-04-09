@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
+import logging
 
 #upload functions
 def check_txt(file):
@@ -38,5 +39,10 @@ def upload_txt(request):
          valid="Fiserul incarcat este invalid!"
          p_class="text-warning"
      print(str(descriere.name)+' '+str(descriere.size))
+
+     # getting a local copy
+     local_copy = descriere.read().decode('ASCII')
+     print(local_copy)
+
      return render(request,'MapsApp/aplicatie1.html',{'valid':valid,'p_class':p_class})
 
