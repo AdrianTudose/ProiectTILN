@@ -28,7 +28,7 @@
 </div>
 
 <div class="map_details border" id="Details">
-  <img src="{% static "MapsApp/img/hide_img.jpeg" %}" class="img-fluid hide_button" alt="Responsive image">
+  <img src="{% static "MapsApp/img/hide_img.jpeg" %}" class="img-fluid hide_button" alt="Responsive image" onclick="hide_detalis(this)" value="off">
 
 
  <div> 
@@ -74,7 +74,50 @@
 </div> 
 </div>
 <script>
+
+var details_visible=true
+var map_zoom=6;
+
+  function hide_detalis(button)
+  {
+    var value=button.getAttribute('value');
+    var details=document.getElementById("Details");
+    var divs=details.getElementsByTagName("div");
+    var map=document.getElementById("GoogleMap");
+    
+
+    if(details_visible)
+   {
+
+    map.style.width="87%";
+    
+
+    for(var i=0;i<divs.length;i++)
+      divs[i].style.visibility="hidden";
+
+    details.classList.remove("border");
+    details_visible=false;
+
+    button.src="{% static "MapsApp/img/view_img.jpeg" %}";
+    
+   }
+
+   else 
+   {
+    map.style.width="50%";
   
+
+    for(var i=0;i<divs.length;i++)
+      divs[i].style.visibility="visible";
+
+     details.classList.add("border");
+     details_visible=true;
+
+     button.src="{% static "MapsApp/img/hide_img.jpeg" %}";
+
+   }
+
+  }
   function get_distance(legs)
    {
     var distance=0;
@@ -119,7 +162,7 @@
         var directionsService = new google.maps.DirectionsService;
         var directionsRenderer = new google.maps.DirectionsRenderer;
         var map = new google.maps.Map(document.getElementById('GoogleMap'), {
-          zoom: 6,
+          zoom: map_zoom,
           center: {lat: 47.74, lng: 26.65}
         });
         directionsRenderer.setMap(map);
@@ -140,8 +183,8 @@
         
         var travelMode=(document.getElementById("travelMode")).options[(document.getElementById("travelMode")).selectedIndex].value;
 
-        for (var i = 0; i < waypts.length; i+=2) 
-          console.log(waypoints[i])
+        for (var i = 0; i < waypoints.length; i+=2) 
+
           {
             waypts.push({
                location: new google.maps.LatLng(waypoints[i],waypoints[i+1]),
