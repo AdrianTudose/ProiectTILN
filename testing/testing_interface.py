@@ -59,7 +59,7 @@ def update_text(event):
 
         for sentence in sentences:
             for word in sentence:
-                if (word[1] != "ALINIERE"):
+                if (word[0] not in [" ","\t","\n"]):
                     word_width = max(len(word[0]), len(word[1])) + 4
 
                     if current_pos + word_width > width / 8:

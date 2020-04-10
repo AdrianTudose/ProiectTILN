@@ -6,6 +6,9 @@ import warnings
 import spacy
 import rowordnet as rwn
 
+import pickle
+from nltk.tokenize.punkt import PunktSentenceTokenizer
+
 TIP = {
     "CUVANT": "[0-9a-zA-ZăîşșţâĂÂÎȘȚ]+",
     "PUNCTUATIE": ",|;|:|-|\(|\)",
@@ -41,8 +44,8 @@ def import_word_sets(folder):
     return word_sets
 
 
-def sentence_tokenizer(text):
-    sentence_list = list()
+def sentence_tokenizer(text,tok):
+    """sentence_list = list()
     sentence = list()
 
     for word in text:
@@ -52,29 +55,32 @@ def sentence_tokenizer(text):
             sentence = list()
 
     if len(sentence) > 0:
-        sentence_list.append(sentence)
+        sentence_list.append(sentence)"""
 
-    return sentence_list
+    return tok.tokenize(text)
 
 
 def word_tokenizer(text):
-    words = list()
-    r = re.compile("(" + TIP["CUVANT"] + ")|(" + TIP["SFARSIT_PROPOZITIE"] + "|" + TIP["PUNCTUATIE"] + ")|("
-                   + TIP["ALINIERE"] + ")")
+    tokenized_text = list()
+    for sentence in text:
+        words = list()
+        r = re.compile("(" + TIP["SFARSIT_PROPOZITIE"] + "|" + TIP["PUNCTUATIE"] + ")|(" + TIP["ALINIERE"] + ")")
+        for section in sentence:
+            if type(section) == str:
+                ind_start = 0
+                for cuv in r.finditer(section):
+                    ind_end = cuv.start(0)
+                    if ind_end != ind_start:
+                        words.append([section[ind_start:ind_end],"CUVANT"])
 
-    for section in text:
-        if type(section) == str:
-            for cuv in r.findall(section):
-                if cuv[0] != "":
-                    words.append([cuv[0], "CUVANT"])
-                elif cuv[1] != "":
-                    words.append([cuv[1], "PUNCTUATIE"])
-                else:
-                    words.append([cuv[2], "ALINIERE"])
-        else:
-            words.append(section)
-
-    return words
+                    words.append([section[cuv.start(0):cuv.end(0)]," "])
+                    ind_start = cuv.end(0)
+                if ind_start != len(section):
+                    words.append([section[ind_start:], "CUVANT"])
+            else:
+                words.append(section)
+        tokenized_text.append(words)
+    return tokenized_text
 
 
 def syn_to_text(syn):
@@ -86,76 +92,79 @@ def syn_to_text(syn):
         return "ADJECTIV"
     elif syn == "r":
         return "ADJECTIV"
-    else:
-        return "CEVA"
 
+def get_type(word, word_sets, wn, stop_words):
+    lower_word = word[0].lower()
+    if lower_word in stop_words:
+        return " "
+    elif word[1] in ("LOC","FACILITY"):
+        return "LOCATIE"
+    elif word[1] == "NUMERIC_VALUE":
+        return "NUMAR"
+    elif word[1] == "DATETIME":
+        return "TIMP"
+    if word[1] == "CUVANT":
+        for set in word_sets:
+            if lower_word in set[1]:
+                return set[0]
 
-# to be made
-def lemalize(word):
-    return word
-
-
-def get_type(word, word_sets, wn):
-    for set in word_sets:
-        if word in set[1]:
-            return set[0]
-
-    id_of_synset = wn.synsets(literal=word)
-    if id_of_synset:
-        syn = str(wn.synset(id_of_synset[0]).pos)
-        return syn_to_text(syn)
-    """else:
-        word = lemalize(word)
-        id_of_synset = wn.synsets(literal=word)
+        id_of_synset = wn.synsets(literal=lower_word)
         if id_of_synset:
             syn = str(wn.synset(id_of_synset[0]).pos)
-            return syn_to_text(syn)"""
+            return syn_to_text(syn)
 
-    warnings.warn("Could not find type of word: \"" + word + "\".")
-    # modify to send message "Reconsiderati folosirea cuvantului ... " cu highlight
-    # and another idea for guessing the word
-    return "XXX"
+    return " "
 
 
 def run_name_entity_recognizer(text):
-    nlp = spacy.load("data/ner_model")
-    doc = nlp(text)
+    sentence_results = list()
+    for sentence in text:
+        nlp = spacy.load("data/ner_model")
+        doc = nlp(sentence)
 
-    string_start = 0
-    result = list()
-    rest_of_text = ""
+        string_start = 0
+        result = list()
+        rest_of_text = ""
 
-    for ent in doc.ents:
-        string_end = ent.start_char
-        rest_of_text = text[string_start:string_end]
+        for ent in doc.ents:
+            string_end = ent.start_char
+            rest_of_text = sentence[string_start:string_end]
+            if rest_of_text != "":
+                result.append(rest_of_text)
+            result.append([ent.text, ent.label_])
+            string_start = ent.end_char
+
         if rest_of_text != "":
+            rest_of_text = sentence[string_start:]
             result.append(rest_of_text)
-        result.append([ent.text, ent.label_])
-        string_start = ent.end_char
 
-    if rest_of_text != "":
-        rest_of_text = text[string_start:]
-        result.append(rest_of_text)
+        if len(doc.ents) == 0:
+            result = [sentence]
+    sentence_results.append(result)
 
-    if len(doc.ents) == 0:
-        return [text]
-
-    return result
+    return sentence_results
 
 
 def process(text, word_sets_folder="data/word_sets"):
     word_sets = import_word_sets(word_sets_folder)
     wn = rwn.RoWordNet()
 
+    nltk_model_file = open('data/NLTK_model_data/model.txt', 'rb')
+    trained = pickle.load(nltk_model_file)
+
+    stop_words = open('data/stop-words-ro.txt','r').read().split("\n")
+
+    sentence_tokenizer = PunktSentenceTokenizer(trained.get_params())
+
+    text = sentence_tokenizer.tokenize(text)
+
     text = run_name_entity_recognizer(text)
 
     text = word_tokenizer(text)
 
-    text = sentence_tokenizer(text)
-
     for sentence in text:
         for word in sentence:
-            if word[1] == "CUVANT":
-                word[1] = get_type(word[0], word_sets, wn)
+            if word[1] != " ":
+                word[1] = get_type(word, word_sets, wn, stop_words)
 
     return text

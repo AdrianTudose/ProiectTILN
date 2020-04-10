@@ -10,16 +10,16 @@ text = ""
 # for file_id in gutenberg.fileids():
 #     text += gutenberg.raw(file_id)
 
-with open('data/NLTK_model_data/eminescu.txt', 'r') as file:
+with open('eminescu.txt', 'r') as file:
     text = file.read()
 
-with open('data/NLTK_model_data/hogas.txt', 'r', encoding='utf8') as file:
+with open('hogas.txt', 'r', encoding='utf8') as file:
     text += file.read()
 
-with open('data/NLTK_model_data/bucuresti.txt', 'r', encoding='utf8') as file:
+with open('bucuresti.txt', 'r', encoding='utf8') as file:
     text += file.read()
 
-with open('data/NLTK_model_data/pesteri.txt', 'r', encoding='utf8') as file:
+with open('pesteri.txt', 'r', encoding='utf8') as file:
     text += file.read()
 
 # print(len(text))
@@ -28,5 +28,5 @@ trainer = PunktTrainer()
 trainer.INCLUDE_ALL_COLLOCS = True
 trainer.train(text)
 
-with open('data/NLTK_model_data/model.txt', 'wb') as file:
+with open('model.txt', 'wb') as file:
     pickle.dump(trainer, file)
