@@ -75,8 +75,11 @@
 </div>
 <script>
 
+add_waypoints();
+
 var details_visible=true
 var map_zoom=6;
+
 
   function hide_detalis(button)
   {
@@ -120,13 +123,13 @@ var map_zoom=6;
   }
   function get_distance(legs)
    {
-    var distance=0;
+    var distance=parseFloat('0');
     for(var i=0;i<legs.length;i++)
-    {
-      var string=(legs[i].distance.text).split(" ");
-      console.log(legs[i].distance.text);
-      distance+=parseFloat(string[0]);
-    }
+      
+    
+      distance+=legs[i].distance.value;
+
+    distance/=1000;
     var distance_info=document.getElementById("distance");
     distance_info.textContent="Distanta: "+ distance+ " km";
    }
@@ -134,26 +137,54 @@ var map_zoom=6;
    function get_duration(legs)
    {
     var duration=0;
+
     for(var i=0;i<legs.length;i++)
     {
       var string=(legs[i].duration.text).split(" ");
-      console.log(parseInt(string[0]));
 
       duration+=parseInt(string[0]);
     }
-    console.log(duration);
+
     var duration_info=document.getElementById("travelTime");
     duration_info.textContent="Durata drumului: "+ duration+ " minute";
    }
 
-  function add_waypoint(adress)
+
+  function add_waypoints()
   {
+
     var wpt_ul=document.getElementById("Waypoints");
-   
+    var waypoints_coord = {{waypoints}};
+    var waypoints_denumiri={{waypoints_denumiri|safe}};
+    var coord_it=0;
+
+   for(var i=0;i<waypoints_denumiri.length;i++)
+     {
+      //generate li for each waypoint
     var waypoint=document.createElement("li");
         waypoint.classList.add("list-group-item");
-        waypoint.setAttribute("innerHTML",adress);
+        waypoint.innerText=waypoints_denumiri[i];
+        waypoint.setAttribute("lat",waypoints_coord[coord_it]);
+        waypoint.setAttribute("lng",waypoints_coord[coord_it+1]);
+        coord_it+=2;
         wpt_ul.appendChild(waypoint);
+
+      //generate a remove button for each li
+        var remove_button=document.createElement("img");
+        remove_button.src="{% static "MapsApp/img/removewpt_img.jpeg" %}";
+        remove_button.classList.add("hide_button");
+
+        remove_button.onclick=function remove_waypoint()
+        {
+         var wpt_ul=document.getElementById("Waypoints");
+         var waypoint=this.parentElement;
+         console.log(waypoint.textContent);
+         wpt_ul.removeChild(waypoint);
+         initMap();
+        }
+
+        waypoint.appendChild(remove_button);
+      }
    
   }
 
@@ -176,18 +207,21 @@ var map_zoom=6;
 
       function calculateAndDisplayRoute(directionsService, directionsRenderer) {
         var waypts = [];
-        var waypoints = {{waypoints}};
+        var waypoints=document.getElementById("Waypoints").getElementsByTagName("li");
+
+       
+        
  
         var start= new google.maps.LatLng(start_coord[0],start_coord[1]);
         var destinatie=new google.maps.LatLng(dest_coord[0],dest_coord[1]);
         
         var travelMode=(document.getElementById("travelMode")).options[(document.getElementById("travelMode")).selectedIndex].value;
 
-        for (var i = 0; i < waypoints.length; i+=2) 
+        for (var i = 0; i < waypoints.length; i++) 
 
           {
             waypts.push({
-               location: new google.maps.LatLng(waypoints[i],waypoints[i+1]),
+               location: new google.maps.LatLng(waypoints[i].getAttribute("lat"),waypoints[i].getAttribute("lng")),
               stopover: true
             });
 

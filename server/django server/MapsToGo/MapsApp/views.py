@@ -20,11 +20,12 @@ def home(request):
 def aplicatie_1(request):
     return render(request,'MapsApp/aplicatie1.html')
 def aplicatie_2(request):
+    waypoints_denumiri=['Directia Sanitara Veterinara','Liceul Agronomic']
     start=[47.748956,26.670367]
     destinatie=[47.745738,26.674013]
     waypoints=[47.748131,26.674237,47.747107,26.673049]
 
-    return render(request,'MapsApp/aplicatie2.html',{'waypoints':waypoints,'start':start,'destinatie':destinatie})
+    return render(request,'MapsApp/aplicatie2.html',{'waypoints':waypoints,'start':start,'destinatie':destinatie,'waypoints_denumiri':waypoints_denumiri})
 def despre(request):
     return render(request,'MapsApp/despre.html')
 def upload_txt(request):
