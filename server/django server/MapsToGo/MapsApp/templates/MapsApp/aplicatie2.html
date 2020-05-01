@@ -79,6 +79,7 @@ add_waypoints();
 
 var details_visible=true
 var map_zoom=6;
+var map_center=null;
 
 
   function hide_detalis(button)
@@ -166,20 +167,33 @@ var map_zoom=6;
         waypoint.innerText=waypoints_denumiri[i];
         waypoint.setAttribute("lat",waypoints_coord[coord_it]);
         waypoint.setAttribute("lng",waypoints_coord[coord_it+1]);
+        waypoint.setAttribute("active","true");
         coord_it+=2;
         wpt_ul.appendChild(waypoint);
 
       //generate a remove button for each li
         var remove_button=document.createElement("img");
-        remove_button.src="{% static "MapsApp/img/removewpt_img.jpeg" %}";
-        remove_button.classList.add("hide_button");
+        remove_button.src="{% static "MapsApp/img/waypoints_img.jpeg" %}";
+        remove_button.classList.add("remove_waypoint_button");
 
-        remove_button.onclick=function remove_waypoint()
+        remove_button.onclick=function remove_add_waypoint()
         {
          var wpt_ul=document.getElementById("Waypoints");
          var waypoint=this.parentElement;
+
+         if(waypoint.getAttribute("active")=="true")
+         {
          console.log(waypoint.textContent);
-         wpt_ul.removeChild(waypoint);
+         waypoint.setAttribute("active","false");
+         waypoint.classList.add("list-group-item-light");
+         this.src="{% static "MapsApp/img/removewpt2_img.jpeg" %}";
+         }
+         else
+         {
+          waypoint.setAttribute("active","true");
+         waypoint.classList.remove("list-group-item-light");
+         this.src="{% static "MapsApp/img/waypoints_img.jpeg" %}";
+         }
          initMap();
         }
 
@@ -218,7 +232,7 @@ var map_zoom=6;
         var travelMode=(document.getElementById("travelMode")).options[(document.getElementById("travelMode")).selectedIndex].value;
 
         for (var i = 0; i < waypoints.length; i++) 
-
+          if(waypoints[i].getAttribute("active")=="true")
           {
             waypts.push({
                location: new google.maps.LatLng(waypoints[i].getAttribute("lat"),waypoints[i].getAttribute("lng")),
