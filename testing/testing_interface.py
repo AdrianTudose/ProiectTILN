@@ -82,9 +82,11 @@ def update_text(event):
                     if len(word) == 2:
                         word.append([start_index1, start_index2])
                         word.append([end_index1, end_index2])
+                        word.append(current_line)
                     else:
                         word[2] = [start_index1, start_index2]
                         word[3] = [end_index1, end_index2]
+                        word[4] = current_line
 
                     current_pos += word_width
 
@@ -98,8 +100,21 @@ def update_text(event):
         for position in positions:
             print("".join(
                 [x[0] for x in [sentences[position[2][0]][y] for y in range(position[2][1], position[2][-1] + 1)]]))
-            highlight(sentences[position[2][0]][position[2][1]][2][0], sentences[position[2][0]][position[2][-1]][3][0])
-            highlight(sentences[position[2][0]][position[2][1]][2][1], sentences[position[2][0]][position[2][-1]][3][1])
+            start = 1
+            finnish = 1
+            while finnish <= len(position[2]) - 1:
+                while finnish+1 <= len(position[2]) - 1 and sentences[position[2][0]][position[2][start]][4] == sentences[position[2][0]][position[2][finnish+1]][4]:
+                    finnish += 1
+                highlight(sentences[position[2][0]][position[2][start]][2][0],
+                          sentences[position[2][0]][position[2][finnish]][3][0])
+                highlight(sentences[position[2][0]][position[2][start]][2][1],
+                          sentences[position[2][0]][position[2][finnish]][3][1])
+                finnish += 1
+                start = finnish
+
+
+
+
 
 
 text2.bind("<Configure>", update_text)

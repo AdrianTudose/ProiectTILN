@@ -117,9 +117,10 @@ def get_type(word, word_sets, wn, stop_words):
 
 
 def run_name_entity_recognizer(text):
+    nlp = spacy.load("data/ner_model")
     sentence_results = list()
+
     for sentence in text:
-        nlp = spacy.load("data/ner_model")
         doc = nlp(sentence)
 
         string_start = 0
@@ -140,7 +141,8 @@ def run_name_entity_recognizer(text):
 
         if len(doc.ents) == 0:
             result = [sentence]
-    sentence_results.append(result)
+
+        sentence_results.append(result)
 
     return sentence_results
 

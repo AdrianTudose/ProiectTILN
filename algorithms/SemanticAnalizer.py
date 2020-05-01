@@ -49,7 +49,7 @@ def analise(sentences, rules_file="data/semantic_rules.txt"):
     r = re.compile(query)
 
     for j, sentence in enumerate(sentences):
-        extended_sentence = " ".join([str(i) + "{" + x[1] + "}" if x[1] != "PUNCTUATIE" and x[1] != "ALINIERE" else ""
+        extended_sentence = " ".join([str(i) + "{" + x[1] + "}" if x[1] != " " else ""
                                       for i, x in enumerate(sentence)])
         result = r.findall(extended_sentence)
 
@@ -61,7 +61,7 @@ def analise(sentences, rules_file="data/semantic_rules.txt"):
                 if seq != "":
                     words.append(sentence[int(seq)][0])
                     word_seq.append(int(seq))
-                    seq_rule = rules[rule_position[i]]
+                    seq_rule = rule_position[i]
 
             matching_rules.append([words,seq_rule, word_seq])
 
