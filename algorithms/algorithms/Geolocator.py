@@ -4,7 +4,7 @@ import googlemaps
 
 
 def get_coordinates(directions):
-    api_key = open("data/google_api_key.txt", "r").read()
+    api_key = open("Algorithms/data/google_api_key.txt", "r").read()
     # get API key from https://console.cloud.google.com/apis/credentials
 
     global gmaps
@@ -12,8 +12,11 @@ def get_coordinates(directions):
 
     decoder_function = [rule_LOCATION,rule_2]
     coordonates_list = list()
+
     for d in directions:
-        coordonates_list += [decoder_function[d[1]](d[0])]
+        loc = decoder_function[d[1]](d[0])
+        if loc:
+            coordonates_list += [loc]
 
     return coordonates_list
 

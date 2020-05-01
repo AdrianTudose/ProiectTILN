@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+ <head>
+ 	
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+ {% load static %}
+     <link rel="stylesheet" href="{% static "MapsApp/css/style.css" %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+ </head>
+ <body >
+
+ 	<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="/">Acasa</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="/aplicatie1">Aplicatie</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/despre">Despre</a>
+  </li>
+</ul>
+
+<div class="insert noselect border" name="Insert div">
+  <p>Aici veti introduce descrierea traseului:</p>
+  
+  <form id="upload_form" action="/upload_txt" enctype="multipart/form-data" method="POST">
+      {% csrf_token %}
+  <input type="file" id="descriere" class="btn btn-secondary" id="myFile" name="descriere">
+  &nbsp
+  <input type="submit" id="submit" class="btn btn-success" value="Upload">
+</form>
+<p></p>
+<div>
+<p>Fsierul introdus trebuie sa fie de tip text(.txt)</p>
+    <p class={{p_class}}>{{valid}}</p>
+</div>
+
+</div>
+
+
+<script>
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();   
+});
+$(document).ready(function(){
+    $("#submit").hide();
+    $("#descriere").on("change", function(){
+        $("#submit").show();
+    })
+});
+</script>
+
+ </body>
+</html>

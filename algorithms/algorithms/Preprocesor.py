@@ -117,7 +117,7 @@ def get_type(word, word_sets, wn, stop_words):
 
 
 def run_name_entity_recognizer(text):
-    nlp = spacy.load("data/ner_model")
+    nlp = spacy.load("Algorithms/data/ner_model")
     sentence_results = list()
 
     for sentence in text:
@@ -147,14 +147,14 @@ def run_name_entity_recognizer(text):
     return sentence_results
 
 
-def process(text, word_sets_folder="data/word_sets"):
+def process(text, word_sets_folder="Algorithms/data/word_sets"):
     word_sets = import_word_sets(word_sets_folder)
     wn = rwn.RoWordNet()
 
-    nltk_model_file = open('data/NLTK_model_data/model.txt', 'rb')
+    nltk_model_file = open('Algorithms/data/NLTK_model_data/model.txt', 'rb')
     trained = pickle.load(nltk_model_file)
 
-    stop_words = open('data/stop-words-ro.txt','r').read().split("\n")
+    stop_words = open('Algorithms/data/stop-words-ro.txt','r').read().split("\n")
 
     sentence_tokenizer = PunktSentenceTokenizer(trained.get_params())
 

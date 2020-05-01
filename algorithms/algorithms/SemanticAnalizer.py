@@ -1,6 +1,6 @@
 import re
 
-from algorithms.Preprocesor import TIP
+from Algorithms.algorithms.Preprocesor import TIP
 
 rule_position = list()
 rules = list()
@@ -43,7 +43,7 @@ def import_rules(filename):
     return return_regex
 
 #you need to have more than one rule with one element
-def analise(sentences, rules_file="data/semantic_rules.txt"):
+def analise(sentences, rules_file="Algorithms/data/semantic_rules.txt"):
     query = import_rules(rules_file)
     matching_rules = list()
     r = re.compile(query)
