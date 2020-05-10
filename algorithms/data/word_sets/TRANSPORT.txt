@@ -1,0 +1,7 @@
+masina
+bicicleta
+tren
+tramvai
+autobuz
+avion
+pas
