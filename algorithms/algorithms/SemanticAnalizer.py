@@ -1,6 +1,6 @@
 import re
 
-from Algorithms.algorithms.Preprocesor import TIP
+from algorithms.algorithms.Preprocesor import TIP
 
 rule_position = list()
 rules = list()

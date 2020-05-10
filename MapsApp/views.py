@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from Algorithms.main import *
+from algorithms.main import *
 from django.http import HttpResponse
 from django.core import serializers
 import logging

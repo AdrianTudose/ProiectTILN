@@ -4,7 +4,7 @@ import googlemaps
 
 
 def get_coordinates(directions):
-    api_key = open("Algorithms/data/google_api_key.txt", "r").read()
+    api_key = open("algorithms/data/google_api_key.txt", "r").read()
     # get API key from https://console.cloud.google.com/apis/credentials
 
     global gmaps

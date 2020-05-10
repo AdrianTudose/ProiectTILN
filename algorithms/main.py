@@ -1,6 +1,6 @@
 import sys
 
-from Algorithms.algorithms import Preprocesor, SemanticAnalizer, Geolocator
+from algorithms.algorithms import Preprocesor, SemanticAnalizer, Geolocator
 
 def execute_algorithms(text):
 
