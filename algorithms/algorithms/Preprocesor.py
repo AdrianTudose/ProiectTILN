@@ -43,6 +43,7 @@ def import_word_sets(folder):
 
     return word_sets
 
+<<<<<<< Updated upstream
 
 def sentence_tokenizer(text,tok):
     """sentence_list = list()
@@ -60,6 +61,8 @@ def sentence_tokenizer(text,tok):
     return tok.tokenize(text)
 
 
+=======
+>>>>>>> Stashed changes
 def word_tokenizer(text):
     tokenized_text = list()
     for sentence in text:
@@ -73,7 +76,11 @@ def word_tokenizer(text):
                     if ind_end != ind_start:
                         words.append([section[ind_start:ind_end],"CUVANT"])
 
+<<<<<<< Updated upstream
                     words.append([section[cuv.start(0):cuv.end(0)]," "])
+=======
+                    #words.append([section[cuv.start(0):cuv.end(0)]," "])
+>>>>>>> Stashed changes
                     ind_start = cuv.end(0)
                 if ind_start != len(section):
                     words.append([section[ind_start:], "CUVANT"])
@@ -82,7 +89,10 @@ def word_tokenizer(text):
         tokenized_text.append(words)
     return tokenized_text
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 def syn_to_text(syn):
     if syn == "n":
         return "SUBSTANTIV"
@@ -93,6 +103,7 @@ def syn_to_text(syn):
     elif syn == "r":
         return "ADJECTIV"
 
+<<<<<<< Updated upstream
 def get_type(word, word_sets, wn, stop_words):
     lower_word = word[0].lower()
     if lower_word in stop_words:
@@ -118,6 +129,34 @@ def get_type(word, word_sets, wn, stop_words):
 
 def run_name_entity_recognizer(text):
     nlp = spacy.load("Algorithms/data/ner_model")
+=======
+def words_clasifier(text, word_sets):
+    new_text = list()
+
+    for sentence in text:
+        new_sentence=list()
+        for word in sentence:
+            lower_word = word[0].lower()
+            if word[1] in ("LOC","FACILITY"):
+                new_sentence.append([word[0],"LOCATIE"])
+            elif word[1] == "NUMERIC_VALUE":
+                new_sentence.append([word[0],"NUMAR"])
+            elif word[1] == "DATETIME":
+                new_sentence.append([word[0],"TIMP"])
+            if word[1] == "CUVANT":
+                for set in word_sets:
+                    if lower_word in set[1]:
+                        new_sentence.append([word[0],set[0]])
+
+        if len(new_sentence) > 0:
+            new_text.append(new_sentence)
+
+    return new_text
+
+
+def run_name_entity_recognizer(text):
+    nlp = spacy.load("algorithms/data/ner_model")
+>>>>>>> Stashed changes
     sentence_results = list()
 
     for sentence in text:
@@ -147,6 +186,7 @@ def run_name_entity_recognizer(text):
     return sentence_results
 
 
+<<<<<<< Updated upstream
 def process(text, word_sets_folder="Algorithms/data/word_sets"):
     word_sets = import_word_sets(word_sets_folder)
     wn = rwn.RoWordNet()
@@ -155,6 +195,16 @@ def process(text, word_sets_folder="Algorithms/data/word_sets"):
     trained = pickle.load(nltk_model_file)
 
     stop_words = open('Algorithms/data/stop-words-ro.txt','r').read().split("\n")
+=======
+def process(text, word_sets_folder="algorithms/data/word_sets"):
+    word_sets = import_word_sets(word_sets_folder)
+    wn = rwn.RoWordNet()
+
+    nltk_model_file = open('algorithms/data/NLTK_model_data/model.txt', 'rb')
+    trained = pickle.load(nltk_model_file)
+
+    stop_words = open('algorithms/data/stop-words-ro.txt','r').read().split("\n")
+>>>>>>> Stashed changes
 
     sentence_tokenizer = PunktSentenceTokenizer(trained.get_params())
 
@@ -164,9 +214,13 @@ def process(text, word_sets_folder="Algorithms/data/word_sets"):
 
     text = word_tokenizer(text)
 
+<<<<<<< Updated upstream
     for sentence in text:
         for word in sentence:
             if word[1] != " ":
                 word[1] = get_type(word, word_sets, wn, stop_words)
+=======
+    text = words_clasifier(text,word_sets)
+>>>>>>> Stashed changes
 
     return text

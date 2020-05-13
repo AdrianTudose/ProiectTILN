@@ -117,3 +117,8 @@ padding-top: 1px;
   cursor: pointer;
 }
 
+.waypoints_ul
+{
+  overflow:scroll;
+  max-height: 200px;
+}

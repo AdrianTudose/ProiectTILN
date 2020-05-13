@@ -25,34 +25,24 @@
 </ul>
 
 <div class="insert noselect border" name="Insert div">
-  <p>Aici veti introduce descrierea traseului:</p>
   
   <form id="upload_form" action="/upload_txt" enctype="multipart/form-data" method="POST">
       {% csrf_token %}
-  <input type="file" id="descriere" class="btn btn-secondary" id="myFile" name="descriere">
-  &nbsp
-  <input type="submit" id="submit" class="btn btn-success" value="Upload">
+      <div class="form-group">
+    <label for="formGroupExampleInput">Orasul corespunzator traseului:</label>
+    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="" name="oras">
+  </div>
+  <div class="form-group">
+    <label for="formGroupExampleInput">Aici veti introduce descrierea traseului:</label>
+  <textarea class="form-control" id="exampleFormControlTextarea1"  name="descriere"></textarea>
+  </div>
+  <p></p>
+  <button type="submit" class="btn btn-primary mb-2">Genereaza traseul</button>
 </form>
-<p></p>
-<div>
-<p>Fsierul introdus trebuie sa fie de tip text(.txt)</p>
-    <p class={{p_class}}>{{valid}}</p>
-</div>
 
 </div>
 
 
-<script>
-$(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip();   
-});
-$(document).ready(function(){
-    $("#submit").hide();
-    $("#descriere").on("change", function(){
-        $("#submit").show();
-    })
-});
-</script>
 
  </body>
 </html>
