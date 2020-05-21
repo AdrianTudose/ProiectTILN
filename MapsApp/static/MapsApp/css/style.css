@@ -122,3 +122,13 @@ padding-top: 1px;
   overflow:scroll;
   max-height: 200px;
 }
+
+.uploadbox
+{
+  display:none;
+}
+
+.textbox
+{
+  display:block;
+}

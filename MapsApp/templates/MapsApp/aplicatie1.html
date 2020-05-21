@@ -25,12 +25,23 @@
 </ul>
 
 <div class="insert noselect border" name="Insert div">
+
+  <div>
+Alegeti modul de a introduce descrierea:
+      <select id="textMode" class="browser-default custom-select" onchange="switch_mode()">
+  <option selected value="textbox">Textbox</option>
+  <option value="upload">Upload text(.txt)</option>
+</select>
+  </div>
   
-  <form id="upload_form" action="/upload_txt" enctype="multipart/form-data" method="POST">
+  <div id="textbox" class="textbox">
+
+  <form id="textbox_form" action="/textbox_upload" enctype="multipart/form-data" method="POST">
       {% csrf_token %}
+
       <div class="form-group">
     <label for="formGroupExampleInput">Orasul corespunzator traseului:</label>
-    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="" name="oras">
+    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="" name="orasTextbox">
   </div>
   <div class="form-group">
     <label for="formGroupExampleInput">Aici veti introduce descrierea traseului:</label>
@@ -42,7 +53,87 @@
 
 </div>
 
+<div id="uploadbox" class="uploadbox">
+<form id="upload_form" action="/textfile_upload" enctype="multipart/form-data" method="POST">{% csrf_token %}
+   <div class="form-group">
+    <label for="formGroupExampleInput">Orasul corespunzator traseului:</label>
+    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="" name="orasUpload">
+  </div>
+  <p>Introduceti un fisier text(.txt) valid pentru a genera traseul.</p>
+     <div class="form-group">
+<div class="custom-file">
+    <input type="file" class="custom-file-input" id="textFile" onchange="check_upload()" name="file">
+    <label class="custom-file-label" for="inputGroupFile01">Alege fisierul...</label>
+  </div>
+  <p></p>
+      <button id="uploadButton" type="submit" class="btn btn-primary mb-2">Genereaza traseul</button>
+    <p id="checkMessage"></p>
+    <p></p>
+  </div>
+</form>
 
+</div>
+
+</div>
+
+<script>
+
+function switch_mode()
+{
+ var textMode=(document.getElementById("textMode")).options[(document.getElementById("textMode")).selectedIndex].value;
+
+ var textbox=document.getElementById("textbox");
+
+ var upload=document.getElementById("uploadbox");
+
+ if(textMode=="upload")
+ {
+  textbox.style.display="none";
+  upload.style.display="block";
+ }
+ else if(textMode="textbox")
+ {
+  textbox.style.display="block";
+  upload.style.display="none";
+ }
+
+}
+
+function check_upload()
+{
+  var fileName=document.getElementById("textFile").value;
+  var checkMessage=document.getElementById("checkMessage");
+  var uploadButton=document.getElementById("uploadButton");
+
+  if(fileName!= "") {
+     var extension=fileName.split('.').pop();
+     console.log(extension);
+     if(extension=="txt")
+     {
+       checkMessage.className="";
+       checkMessage.innerHTML="Fisierul introdus este valid!";
+       checkMessage.classList.add("text-success");
+       uploadButton.disabled=false;
+     }
+
+     else
+     {
+      checkMessage.className="";
+       checkMessage.innerHTML="Fisierul introdus nu este valid!";
+       checkMessage.classList.add("text-warning");
+       uploadButton.disabled=true;
+     }
+  }
+
+  else
+  {
+    checkMessage.className="";
+       checkMessage.innerHTML="Fisierul introdus nu este valid!";
+       checkMessage.classList.add("text-warning");
+       file.disabled=true; 
+  }
+}
+</script>
 
  </body>
 </html>

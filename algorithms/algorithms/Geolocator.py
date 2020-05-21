@@ -1,11 +1,3 @@
-<<<<<<< Updated upstream
-from pprint import pprint
-
-import googlemaps
-
-
-def get_coordinates(directions):
-=======
 import googlemaps
 
 viteza = {
@@ -21,22 +13,12 @@ viteza = {
 
 
 def get_coordinates(directions,oras):
->>>>>>> Stashed changes
     api_key = open("algorithms/data/google_api_key.txt", "r").read()
     # get API key from https://console.cloud.google.com/apis/credentials
 
     global gmaps
     gmaps = googlemaps.Client(key=api_key)
 
-<<<<<<< Updated upstream
-    decoder_function = [rule_LOCATION,rule_2]
-    coordonates_list = list()
-
-    for d in directions:
-        loc = decoder_function[d[1]](d[0])
-        if loc:
-            coordonates_list += [loc]
-=======
     decoder_function = [
         rule_TRANSPORT_TIMP_DIRECTIE_DIRECTIE,
         rule_TIM_DIRECTIE_DIRECTIE,
@@ -56,19 +38,10 @@ def get_coordinates(directions,oras):
         if response:
             coords,name=response
             coordonates_list += [coords+[name]]
->>>>>>> Stashed changes
 
     return coordonates_list
 
 
-<<<<<<< Updated upstream
-def rule_LOCATION(place):
-    loc_data = gmaps.geocode(place)
-    return [loc_data[0]["geometry"]["location"]["lat"],loc_data[0]["geometry"]["location"]["lng"],place[0]]
-
-def rule_2(place):
-    pass
-=======
 def rule_TRANSPORT_TIMP_DIRECTIE_DIRECTIE(arg,coord,oras):
     pass
 
@@ -98,4 +71,3 @@ def rule_LOCATIE(arg,coord,oras):
     lat = loc_data[0]["geometry"]["location"]["lat"]
     lng = loc_data[0]["geometry"]["location"]["lng"]
     return [lat,lng],arg[0]
->>>>>>> Stashed changes

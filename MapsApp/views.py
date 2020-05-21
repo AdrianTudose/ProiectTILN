@@ -1,5 +1,13 @@
 from django.shortcuts import render
 from algorithms.main import *
+from django import forms
+
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file = forms.FileField()
+
+from django.views.decorators.csrf import csrf_protect
+import json
 from django.http import HttpResponse
 from django.core import serializers
 import logging
@@ -20,15 +28,8 @@ def home(request):
     return render(request,'MapsApp/index.html')
 def aplicatie_1(request):
     return render(request,'MapsApp/aplicatie1.html')
-def aplicatie_2(request):
-    traseu=execute_algorithms("Biserica din cărămidă de la sfârșitul secolului XV-lea, de lângă Palatul Culturii, este Biserica Sf Nicolae. " \
-       "O plimbare de 5 minute spre nord, pe Bulevardul Ștefan cel Mare, te duce la Biserica Trei Ierarhi (str. Ștefan " \
-       "cel Mare și Sfânt nr. 28).")
-   # waypoints_denumiri=['Directia Sanitara Veterinara','Liceul Agronomic']
-   # start=[47.748956,26.670367]
-   # destinatie=[47.745738,26.674013]
- #waypoints=[47.748131,26.674237,47.747107,26.673049]
-    print("*",traseu)
+def aplicatie_2(request,descriere,oras):
+    traseu=execute_algorithms(descriere,oras)
     waypoints=[]
     destinatie=[traseu[-1][0],traseu[-1][1]]
     waypoints_denumiri=[]
@@ -48,22 +49,26 @@ def aplicatie_2(request):
     return render(request,'MapsApp/aplicatie2.html',{'waypoints':waypoints,'start':start,'destinatie':destinatie,'waypoints_denumiri':waypoints_denumiri})
 def despre(request):
     return render(request,'MapsApp/despre.html')
-def upload_txt(request):
-    valid=""
-    p_class=""
-    if request.method=='POST':
-     descriere=request.FILES['descriere']
-     if check_txt(descriere.name):
-         valid="Ati incarcat un fisier txt valid!"
-         p_class="text-success"
-     else:
-         valid="Fiserul incarcat este invalid!"
-         p_class="text-warning"
-     print(str(descriere.name)+' '+str(descriere.size))
 
-     # getting a local copy
-     local_copy = descriere.read().decode('ASCII')
-     print(local_copy)
+def textbox_upload(request):
+    descriere=request.POST.get('descriere')
+    oras=request.POST.get('orasTextbox')
+    #print(descriere)
 
-     return render(request,'MapsApp/aplicatie1.html',{'valid':valid,'p_class':p_class})
+    return aplicatie_2(request,descriere,oras)
 
+def salveaza_descrierea(f):
+    with open('MapsApp/static/MapsApp/descrieri/'+f.name, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+    return str('MapsApp/static/MapsApp/descrieri/'+f.name)
+
+
+def textfile_upload(request):
+         cale_descriere=salveaza_descrierea(request.FILES['file'])
+         with open(cale_descriere, 'r', encoding='utf-8') as file:
+          descriere = str(file.read().replace('\n', ''))
+          print(descriere)
+         oras= oras=request.POST.get('orasUpload')
+         print(oras)
+         return aplicatie_2(request, descriere, oras)

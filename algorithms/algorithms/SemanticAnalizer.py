@@ -43,11 +43,7 @@ def import_rules(filename):
     return return_regex
 
 #you need to have more than one rule with one element
-<<<<<<< Updated upstream:algorithms/algorithms/SemanticAnalizer.py
-def analise(sentences, rules_file="Algorithms/data/semantic_rules.txt"):
-=======
 def analise(sentences, rules_file="algorithms/data/semantic_rules.txt"):
->>>>>>> Stashed changes:algorithms/SemanticAnalizer.py
     query = import_rules(rules_file)
     matching_rules = list()
     r = re.compile(query)

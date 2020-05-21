@@ -111,14 +111,6 @@ def update_text(event):
                           sentences[position[2][0]][position[2][finnish]][3][1])
                 finnish += 1
                 start = finnish
-<<<<<<< Updated upstream:algorithms/testing/testing_interface.py
-
-
-
-
-
-=======
->>>>>>> Stashed changes:testing/testing_interface.py
 
 text2.bind("<Configure>", update_text)
 b["command"] = run_app
