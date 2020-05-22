@@ -10,20 +10,22 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
  </head>
- <body >
-
+ <body class="app_body">
+ 
   <ul class="nav nav-tabs">
   <li class="nav-item">
     <a class="nav-link" href="/">Acasa</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link active" href="/alicatie1">Aplicatie</a>
+    <a class="nav-link active">Aplicatie</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="/despre">Despre</a>
   </li>
 </ul>
-
+ <div align="center">
+  <img src="{% static "MapsApp/img/app_logo3.png" %}" class="img-fluid" alt="Responsive image">
+</div>
 <div class="map noselect border" id="GoogleMap">
 </div>
 
@@ -34,7 +36,7 @@
  <div> 
 <img src="{% static "MapsApp/img/waypoints_img.jpeg" %}" class="img-fluid waypoints_img" alt="Responsive image">
 <p class="text-primary text-lg">Waypoints</p>
-<ul class="list-group" id="Waypoints">
+<ul class="list-group waypoints_ul" id="Waypoints">
 </ul>
 
 </div>
@@ -126,28 +128,26 @@ var map_center=null;
    {
     var distance=parseFloat('0');
     for(var i=0;i<legs.length;i++)
-      
-    
       distance+=legs[i].distance.value;
 
     distance/=1000;
     var distance_info=document.getElementById("distance");
-    distance_info.textContent="Distanta: "+ distance+ " km";
+    distance_info.textContent="Distanta: "+ Math.trunc(distance)+ " km";
    }
 
    function get_duration(legs)
    {
-    var duration=0;
+    var duration=parseFloat('0');
 
     for(var i=0;i<legs.length;i++)
     {
-      var string=(legs[i].duration.text).split(" ");
-
-      duration+=parseInt(string[0]);
-    }
+      duration+=legs[i].duration.value;
+    //console.log(legs[i].duration.value);
+    //console.log(legs[i].duration.text);
+}
 
     var duration_info=document.getElementById("travelTime");
-    duration_info.textContent="Durata drumului: "+ duration+ " minute";
+    duration_info.textContent="Durata drumului: "+ Math.trunc(duration/60)+ " minute";
    }
 
 
@@ -155,9 +155,17 @@ var map_center=null;
   {
 
     var wpt_ul=document.getElementById("Waypoints");
+    var start_finish={{start_finish|safe}};
+
+     var waypoint=document.createElement("li");
+        waypoint.classList.add("list-group-item-warning");
+        waypoint.innerText="Start: "+start_finish[0];
+        wpt_ul.appendChild(waypoint);
+
     var waypoints_coord = {{waypoints}};
     var waypoints_denumiri={{waypoints_denumiri|safe}};
     var coord_it=0;
+
 
    for(var i=0;i<waypoints_denumiri.length;i++)
      {
@@ -199,6 +207,11 @@ var map_center=null;
 
         waypoint.appendChild(remove_button);
       }
+
+      var waypoint=document.createElement("li");
+        waypoint.classList.add("list-group-item-warning");
+        waypoint.innerText="Destinatie: "+start_finish[1];
+        wpt_ul.appendChild(waypoint);
    
   }
 
@@ -268,7 +281,7 @@ var map_center=null;
       
     </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=...&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=[API_key_goes_here]&callback=initMap">
     </script>
  </body>
 </html>

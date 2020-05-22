@@ -1,14 +1,12 @@
 import re
 
-from algorithms.algorithms.Preprocesor import TIP
-
 rule_position = list()
 rules = list()
 
 
 def make_rule(text, file, line):
     rule = ""
-    splitede_text = re.findall("(\s)|([A-Z]+)|(\"(?:" + TIP["CUVANT"] + "|\s" + ")+\")|(\?\(.+\))", text)
+    splitede_text = re.findall("(\s)|([A-Z]+)", text)
 
     for k, cuvant in enumerate(splitede_text):
         if cuvant[0] != "":
@@ -16,10 +14,6 @@ def make_rule(text, file, line):
         elif cuvant[1] != "":
             rule += r"([0-9]+){" + cuvant[1] + "}"
             rule_position.append(line)
-        elif cuvant[2] != "":
-            rule += "{[A-Z]+}\s".join(re.findall(TIP["CUVANT"], cuvant[2][1:-1])) + "{[A-Z]+}\s"
-        elif cuvant[3] != "":
-            rule += r"(?:" + make_rule(cuvant[3][2:-1], file, line) + ")?"
         else:
             raise Exception("Invalid expression in \"" + file + "\" ,line: " + str(line + 1) + ".")
 

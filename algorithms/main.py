@@ -8,6 +8,12 @@ def execute_algorithms(text,oras):
 
     directions = SemanticAnalizer.analise(processed_text)
 
+    print("Semantic analizer:")
+    print(directions)
+
     coordinates = Geolocator.get_coordinates(directions,oras)
+
+    print("Geolocator:")
+    print(coordinates)
 
     return coordinates

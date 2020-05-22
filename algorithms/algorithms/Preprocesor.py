@@ -1,21 +1,11 @@
-# to be improved
 import os
 import re
-import warnings
 
+import nltk
 import spacy
-import rowordnet as rwn
 
 import pickle
 from nltk.tokenize.punkt import PunktSentenceTokenizer
-
-TIP = {
-    "CUVANT": "[0-9a-zA-ZăîşșţâĂÂÎȘȚ]+",
-    "PUNCTUATIE": ",|;|:|-|\(|\)",
-    "SFARSIT_PROPOZITIE": "\[\.\.\.\]|\.\.\.|\.|\?!|!\?|\?|!",
-    "ALINIERE": "\s|\t|\n"
-}
-
 
 def import_word_sets(folder):
     word_sets = list()
@@ -47,19 +37,10 @@ def word_tokenizer(text):
     tokenized_text = list()
     for sentence in text:
         words = list()
-        r = re.compile("(" + TIP["SFARSIT_PROPOZITIE"] + "|" + TIP["PUNCTUATIE"] + ")|(" + TIP["ALINIERE"] + ")")
         for section in sentence:
             if type(section) == str:
-                ind_start = 0
-                for cuv in r.finditer(section):
-                    ind_end = cuv.start(0)
-                    if ind_end != ind_start:
-                        words.append([section[ind_start:ind_end],"CUVANT"])
-
-                    #words.append([section[cuv.start(0):cuv.end(0)]," "])
-                    ind_start = cuv.end(0)
-                if ind_start != len(section):
-                    words.append([section[ind_start:], "CUVANT"])
+                result = nltk.word_tokenize(section)
+                words += [[x,"CUVANT"] for x in filter(lambda x: re.match("\w",x),result)]
             else:
                 words.append(section)
         tokenized_text.append(words)
@@ -89,6 +70,7 @@ def words_clasifier(text, word_sets):
             elif word[1] == "DATETIME":
                 new_sentence.append([word[0],"TIMP"])
             if word[1] == "CUVANT":
+                
                 for set in word_sets:
                     if lower_word in set[1]:
                         new_sentence.append([word[0],set[0]])
@@ -132,21 +114,30 @@ def run_name_entity_recognizer(text):
 
 def process(text, word_sets_folder="algorithms/data/word_sets"):
     word_sets = import_word_sets(word_sets_folder)
-    wn = rwn.RoWordNet()
 
     nltk_model_file = open('algorithms/data/NLTK_model_data/model.txt', 'rb')
     trained = pickle.load(nltk_model_file)
-
-    stop_words = open('algorithms/data/stop-words-ro.txt','r').read().split("\n")
 
     sentence_tokenizer = PunktSentenceTokenizer(trained.get_params())
 
     text = sentence_tokenizer.tokenize(text)
 
+    print("Sentence tokenizer:")
+    print(text)
+
     text = run_name_entity_recognizer(text)
+
+    print("Name Entity Recognizer:")
+    print(text)
 
     text = word_tokenizer(text)
 
+    print("Word tokenizer:")
+    print(text)
+
     text = words_clasifier(text,word_sets)
+
+    print("Word clasifier")
+    print(text)
 
     return text

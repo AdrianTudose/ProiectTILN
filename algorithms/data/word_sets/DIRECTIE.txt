@@ -1,4 +1,11 @@
+inainte
+stanga
+dreapta
 nord
 sud
 est
-vestS
+vest
+n
+e
+s
+v

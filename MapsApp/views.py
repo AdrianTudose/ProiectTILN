@@ -33,7 +33,9 @@ def aplicatie_2(request,descriere,oras):
     waypoints=[]
     destinatie=[traseu[-1][0],traseu[-1][1]]
     waypoints_denumiri=[]
+    start_finish = []
     start=[traseu[0][0],traseu[0][1]]
+    start_finish=[traseu[0][2],traseu[-1][2]]
     print("**",destinatie)
     print("**",start)
 
@@ -46,7 +48,7 @@ def aplicatie_2(request,descriere,oras):
     print("**",waypoints)
 
 
-    return render(request,'MapsApp/aplicatie2.html',{'waypoints':waypoints,'start':start,'destinatie':destinatie,'waypoints_denumiri':waypoints_denumiri})
+    return render(request,'MapsApp/aplicatie2.html',{'waypoints':waypoints,'start':start,'destinatie':destinatie,'waypoints_denumiri':waypoints_denumiri,'start_finish':start_finish})
 def despre(request):
     return render(request,'MapsApp/despre.html')
 
